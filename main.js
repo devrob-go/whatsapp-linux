@@ -1,18 +1,19 @@
-const { app, BrowserWindow, Menu, Notification, session, Tray, nativeImage } = require('electron');
+const { app, BrowserWindow, Menu, Notification, session, Tray, nativeImage, ipcMain } = require('electron');
 const path = require('path');
 
 let win;
 let tray;
 
-const gotTheLock = app.requestSingleInstanceLock(); // Prevent multiple instances
+const gotTheLock = app.requestSingleInstanceLock();
 
 if (!gotTheLock) {
-    app.quit(); // Quit if another instance is already running
+    app.quit();
 } else {
     app.on('second-instance', () => {
         if (win) {
             if (win.isMinimized()) win.restore();
             win.show();
+            win.focus();
         }
     });
 
@@ -22,13 +23,24 @@ if (!gotTheLock) {
     });
 }
 
+ipcMain.on('notification-clicked', () => {
+    if (win) {
+        win.show();
+        win.setSkipTaskbar(false); // Ensure it's not hidden
+        win.setAlwaysOnTop(true); // Bring it to the front
+        win.setAlwaysOnTop(false); // Reset so it's normal
+        win.focus();
+    }
+});
+
 function createWindow() {
     win = new BrowserWindow({
         width: 1400,
         height: 800,
-        icon: path.join(__dirname, 'assets/icon.png'), // Set WhatsApp icon
+        icon: path.join(__dirname, 'assets/icon.png'),
         webPreferences: {
-            nodeIntegration: false
+            nodeIntegration: false,
+            preload: path.join(__dirname, 'preload.js') // Ensure this is loaded
         }
     });
 
@@ -52,14 +64,13 @@ function createWindow() {
     win.on('close', (event) => {
         if (!app.isQuiting) {
             event.preventDefault();
-            win.hide(); // Hide instead of closing
+            win.hide();
         }
     });
 }
 
-// Create system tray with a smooth icon
 function createTray() {
-    if (tray) return; // Prevent duplicate tray icons
+    if (tray) return;
 
     let trayIcon = nativeImage.createFromPath(path.join(__dirname, 'assets/icon_tray.png'))
         .resize({ width: 24, height: 24 });
@@ -67,7 +78,15 @@ function createTray() {
     tray = new Tray(trayIcon);
 
     const contextMenu = Menu.buildFromTemplate([
-        { label: 'Open', click: () => win.show() },
+        {
+            label: 'Open', click: () => {
+                if (win) {
+                    if (win.isMinimized()) win.restore();
+                    win.show();
+                    win.focus();
+                }
+            }
+        },
         { label: 'Quit', click: () => { app.isQuiting = true; app.quit(); } }
     ]);
 
@@ -75,6 +94,10 @@ function createTray() {
     tray.setContextMenu(contextMenu);
 
     tray.on('click', () => {
-        win.show(); // Restore window on tray icon click
+        if (win) {
+            if (win.isMinimized()) win.restore();
+            win.show();
+            win.focus();
+        }
     });
 }

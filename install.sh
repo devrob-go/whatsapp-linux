@@ -8,7 +8,10 @@ echo "🔹 Updating System..."
 sudo apt update
 
 echo "🔹 Installing Required Dependencies..."
-sudo apt install -y nodejs npm git
+sudo apt install -y nodejs npm git libnss3 libatk1.0-0 libx11-xcb1 libxcomposite1 libxrandr2 libasound2
+
+echo "🔹 Installing Electron Globally..."
+npm install -g electron
 
 echo "🔹 Installing Electron Packager..."
 npm install -g electron-packager
@@ -30,7 +33,7 @@ sudo chmod +x /opt/whatsapp-web/whatsapp-web
 echo "🔹 Creating Desktop Launcher..."
 cat <<EOF | sudo tee /usr/share/applications/whatsapp-web.desktop
 [Desktop Entry]
-Name=WhatsApp
+Name=WhatsApp Web
 Exec=/opt/whatsapp-web/whatsapp-web
 Icon=/opt/whatsapp-web/resources/app/assets/icon.png
 Terminal=false
