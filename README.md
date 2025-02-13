@@ -15,7 +15,7 @@ A lightweight, standalone desktop app for WhatsApp Web using Electron. No need f
 
 Just run this command in your terminal:
 ```
-bash <(curl -s https://raw.githubusercontent.com/devrob-go/whatsapp-linux/main/install.sh)
+bash <(curl -s https://raw.githubusercontent.com/devrob-go/whatsapp-linux/master/install.sh)
 ```
 This will install the app automatically, create a desktop shortcut, and enable system tray support. 🚀
 
