@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Menu, Notification, session, Tray, nativeImage, ipcMain } = require('electron');
+const { app, BrowserWindow, Menu, Notification, session, Tray, nativeImage, ipcMain, shell } = require('electron');
 const path = require('path');
 
 let win;
@@ -23,13 +23,13 @@ if (!gotTheLock) {
     });
 }
 
-ipcMain.on('notification-clicked', () => {
+// Handle notification clicks
+ipcMain.on("notification-clicked", () => {
     if (win) {
         win.show();
-        win.setSkipTaskbar(false); // Ensure it's not hidden
-        win.setAlwaysOnTop(true); // Bring it to the front
-        win.setAlwaysOnTop(false); // Reset so it's normal
+        win.setAlwaysOnTop(true);
         win.focus();
+        win.setAlwaysOnTop(false); // Remove after forcing focus
     }
 });
 
@@ -40,7 +40,8 @@ function createWindow() {
         icon: path.join(__dirname, 'assets/icon.png'),
         webPreferences: {
             nodeIntegration: false,
-            preload: path.join(__dirname, 'preload.js') // Ensure this is loaded
+            contextIsolation: true,
+            preload: path.join(__dirname, "preload.js"),
         }
     });
 
@@ -57,6 +58,12 @@ function createWindow() {
         } else {
             callback(false);
         }
+    });
+
+    // Open external links in the default web browser
+    win.webContents.setWindowOpenHandler(({ url }) => {
+        shell.openExternal(url);
+        return { action: 'deny' }; // Prevent opening inside Electron app
     });
 
     win.loadURL('https://web.whatsapp.com');
