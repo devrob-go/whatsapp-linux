@@ -4,11 +4,11 @@ A lightweight, standalone desktop app for WhatsApp Web using Electron. No need f
 
 ## 🎯 Features
 
-✅ Dedicated WhatsApp App – No need for a web browser
-✅ System Tray Support – Runs in the background like native apps
-✅ Desktop Notifications – Get message alerts directly on Linux
-✅ Auto Start on Boot (optional) – Opens automatically when you start your PC
-✅ Smooth Tray Icon – Clean, optimized icon for better visibility
+✅ Dedicated WhatsApp App – No need for a web browser \
+✅ System Tray Support – Runs in the background like native apps \
+✅ Desktop Notifications – Get message alerts directly on Linux \
+✅ Auto Start on Boot (optional) – Opens automatically when you start your PC \
+✅ Smooth Tray Icon – Clean, optimized icon for better visibility \
 ✅ Fast & Lightweight – Uses minimal system resources
 
 ## 📦 Installation (One Command Setup)
@@ -100,9 +100,10 @@ sudo update-desktop-database
 
 ### 🌍 Supported Platforms
 
-✅ Ubuntu 20.04+
+✅ Ubuntu 20.04+ \
 ✅ Debian-based Linux distros
-📜 License
+
+### 📜 License
 
 🔹 This project is open-source and available under the MIT License.
 
